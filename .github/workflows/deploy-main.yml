@@ -108,7 +108,8 @@ jobs:
 
           [Service]
           User=${USER}
-          ExecStart=source $HOME/.nvm/nvm.sh&&npm run start --prefix /opt/app/umc10th/current
+          WorkingDirectory=/opt/app/umc10th/current
+          ExecStart=/bin/bash -lc 'source /home/ubuntu/.nvm/nvm.sh && npm run start'
           Restart=always
 
           [Install]
