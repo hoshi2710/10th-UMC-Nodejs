@@ -108,7 +108,7 @@ jobs:
 
           [Service]
           User=${USER}
-          ExecStart=/usr/bin/npm run start --prefix /opt/app/umc10th/current
+          ExecStart=source $HOME/.nvm/nvm.sh&&npm run start --prefix /opt/app/umc10th/current
           Restart=always
 
           [Install]
