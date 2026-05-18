@@ -101,29 +101,27 @@ jobs:
           EC2_DOT_ENV: ${{ secrets.EC2_DOT_ENV }}
       - name: Config systemd service file
         run: |
-          ssh target '
-          sudo systemctl unmask UMC_10th || true
+          ssh target 'sudo systemctl unmask UMC_10th || true'
 
-          cat <<EOF | sudo tee /etc/systemd/system/UMC_10th.service
-              [Unit]
-              Description=UMC_10th
-              After=network.target
+          cat <<'EOF' | ssh target 'sudo tee /etc/systemd/system/UMC_10th.service > /dev/null'
+          [Unit]
+          Description=UMC_10th
+          After=network.target
 
-              [Service]
-              User=ubuntu
-              WorkingDirectory=/opt/app/umc10th/current
-              ExecStart=/bin/bash -lc '\''source $HOME/.nvm/nvm.sh && npm run start'\''
-              Restart=always
-              Environment=NODE_ENV=production
+          [Service]
+          User=ubuntu
+          WorkingDirectory=/opt/app/umc10th/current
+          ExecStart=/bin/bash -lc 'source /home/ubuntu/.nvm/nvm.sh && npm run start'
+          Restart=always
+          Environment=NODE_ENV=production
 
-              [Install]
-              WantedBy=multi-user.target
-              EOF
+          [Install]
+          WantedBy=multi-user.target
+          EOF
 
-          sudo systemctl daemon-reload
-          sudo systemctl enable UMC_10th
-          sudo systemctl restart UMC_10th
-          '
+          ssh target 'sudo systemctl daemon-reload'
+          ssh target 'sudo systemctl enable UMC_10th'
+          ssh target 'sudo systemctl restart UMC_10th'
 
       - name: Check service status
         run: |
